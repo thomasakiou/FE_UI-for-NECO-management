@@ -1,0 +1,135 @@
+<div class="card">
+
+  <p-toolbar class="mb-6">
+    <ng-template pTemplate="start">
+      <div class="toolbar-actions">
+        <p-button (onClick)="showDialog()" label="New" icon="pi pi-plus"></p-button>
+        <p-toast />
+        <p-confirmDialog/>
+        <p-button (click)="confirm2($event)" class="delete-btn" severity="danger" label="Delete" icon="pi pi-trash" outlined></p-button>
+      </div>
+    </ng-template>
+
+
+    <ng-template pTemplate="end">
+      <div class="toolbar-actions toolbar-colors">
+        <p-button label="Import" icon="pi pi-download" severity="secondary"></p-button>
+        <p-button label="Export" icon="pi pi-upload" severity="secondary"></p-button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table
+    #dt
+  [value]="schools"
+  [rows]="5"
+  [paginator]="true"
+  [globalFilterFields]="['name', 'category']"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [rowHover]="true"
+  dataKey="id"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [showCurrentPageReport]="true"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-caption">
+        <h5 class="m-0">School Management</h5>
+
+        <div class="d-flex align-items-center gap-2">
+          <p-select [options]="exams" [(ngModel)]="selectedExam" optionLabel="name" placeholder="Select exam" class="w-full md:w-56" />
+
+          <p-iconfield>
+          <p-inputicon class="pi pi-search"></p-inputicon>
+          <input pInputText type="text" placeholder="Search..." />
+        </p-iconfield>
+        </div>
+      </div>
+    </ng-template>
+
+
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 3rem">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th pSortableColumn="schNo">Sch No. <p-sortIcon field="schNo"></p-sortIcon></th>
+      <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+      <th pSortableColumn="state">State <p-sortIcon field="state"></p-sortIcon></th>
+      <th pSortableColumn="lga">LGA <p-sortIcon field="lga"></p-sortIcon></th>
+      <th pSortableColumn="zone">Zone <p-sortIcon field="zone"></p-sortIcon></th>
+      <th pSortableColumn="address">Address <p-sortIcon field="address"></p-sortIcon></th>
+      <th pSortableColumn="custodian">Custodian <p-sortIcon field="custodian"></p-sortIcon></th>
+      <th pSortableColumn="accrYr">Accr. Year <p-sortIcon field="accrYr"></p-sortIcon></th>
+      <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+      <th></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-school>
+    <tr>
+      <td><p-tableCheckbox [value]="school"></p-tableCheckbox></td>
+      <td>{{ school.schNo }}</td>
+      <td>{{ school.name }}</td>
+      <td>{{ school.state }}</td>
+      <td>{{ school.lga }}</td>
+      <td>{{ school.zone }}</td>
+      <td>{{ school.address }}</td>
+      <td>{{ school.custodian }}</td>
+      <td>{{ school.accrYr }}</td>
+      <td>{{ school.status }}</td>
+      <td class="row-actions">
+        <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="showDialog()"></p-button>
+        <p-button (click)="confirm2($event)" class="delete-btn" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+  </p-table>
+
+
+
+  <p-dialog header="ADD NEW SCHOOL"
+            [modal]="true"
+            [(visible)]="visible"
+            [style]="{ width: '50rem' }"
+            [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <p-inputgroup class="py-2">
+              <input pInputText placeholder="School number" />
+            </p-inputgroup>
+
+              <p-inputgroup class="py-2">
+                <input pInputText placeholder="School name" />
+              </p-inputgroup>
+
+              <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">
+                <p-select optionLabel="name" placeholder="State" class="w-full md:w-56" />
+                <p-select optionLabel="name" placeholder="LGA" class="w-full md:w-56" />
+              </p-inputgroup>
+
+              <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">
+                <p-select optionLabel="name" placeholder="Zone" class="w-full md:w-56" />
+                <p-select optionLabel="name" placeholder="Custodian" class="w-full md:w-56" />
+              </p-inputgroup>
+
+              <p-inputgroup class="py-2">
+                <textarea rows="5" cols="30" pTextarea placeholder="Address of school"></textarea>
+              </p-inputgroup>
+
+
+              <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">
+                <input pInputText placeholder="Status" />
+                <p-datepicker [showIcon]="true" inputId="buttondisplay" [showOnFocus]="false" placeholder="Accreditation Date"/>
+              </p-inputgroup>
+
+
+
+              <div class="modal-btns">
+                <p-button label="Cancel" [raised]="true" severity="secondary" icon="pi pi-times" (onClick)="visible=false"/>
+                <p-button label="Save" [raised]="true" severity="success" icon="pi pi-check" />
+              </div>
+          </div>
+  </p-dialog>
+</div>
