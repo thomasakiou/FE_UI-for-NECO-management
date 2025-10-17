@@ -28,6 +28,7 @@ interface Exm {
 }
 
 interface School {
+  id: number;
   SCHNUM: string;
   STATE_NAME: string;
   SCH_NAME: string;
@@ -128,7 +129,8 @@ export class SchoolsComponent implements OnInit{
       const data = XLSX.utils.sheet_to_json(ws);
 
       // Transform your data into School interface
-      this.schools = (data as any[]).map((row: any) => ({
+      this.schools = (data as any[]).map((row: any, index: number) => ({
+        id: index + 1,
         SCHNUM: row['SCHNUM'] || '',
         STATE_NAME: row['STATE_NAME'] || '',
         SCH_NAME: row['SCH_NAME'] || '',

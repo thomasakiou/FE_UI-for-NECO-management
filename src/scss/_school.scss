@@ -53,6 +53,8 @@
 .p-datatable-tbody > tr > td {
   background-color: $white !important;
   color: #212529;
+  //border-bottom: none !important;
+  //vertical-align: middle !important;
 }
 
 // Hover effect
@@ -87,8 +89,10 @@
 //Call to action row design
 .row-actions {
   display: flex;
-  gap: 0.5rem;
   align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  height: 100%;
 }
 
 //=================PRIMENG Checkbox override==========================
