@@ -15,6 +15,7 @@ import {Dialog, DialogModule} from 'primeng/dialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ConfirmDialog} from 'primeng/confirmdialog';
 import {InputGroup} from 'primeng/inputgroup';
+import * as XLSX from 'xlsx';
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
 import {IftaLabel} from 'primeng/iftalabel';
 import {FloatLabel} from 'primeng/floatlabel';
@@ -24,6 +25,16 @@ import {DatePicker} from 'primeng/datepicker';
 
 interface Exm {
   name: string;
+}
+
+interface School {
+  SCHNUM: string;
+  STATE_NAME: string;
+  SCH_NAME: string;
+  CUST_CODE: string;
+  CUSTODIAN: string;
+  TOWN: string;
+  // status: string;
 }
 
 @Component({
@@ -38,11 +49,15 @@ interface Exm {
 })
 export class SchoolsComponent implements OnInit{
   number: string | undefined;
-
-
+  schools: School[] = [];
+  visible: boolean = false;
   exams: Exm[] | undefined;
-
   selectedExam: Exm | undefined;
+
+  showDialog() {
+    this.visible = true;
+  }
+
 
   ngOnInit() {
     this.exams = [
@@ -82,20 +97,55 @@ export class SchoolsComponent implements OnInit{
   }
 
 
-  visible: boolean = false;
 
-  showDialog() {
-    this.visible = true;
+  // schools = [
+  //   { id: 1, schNo: '021985', name: 'GSS Minna', state: 'Niger', lga: 'Chchanga', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
+  //   { id: 2, schNo: '032456', name: 'CSS Yenagos', state: 'Bayelsa', lga: 'Yenagoa', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
+  //   { id: 3, schNo: '031867', name: 'FGC Kuta', state: 'FCT', lga: 'Abaji', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
+  //   { id: 4, schNo: '025674', name: 'RHS Minna', state: 'Kaduna', lga: 'Bosso', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
+  //   { id: 5, schNo: '001654', name: 'GSS Bida', state: 'Kano', lga: 'Kuda', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
+  //   { id: 6, schNo: '010764', name: 'GGSC Bosso', state: 'Kogi', lga: 'Okene', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' }
+  // ];
+
+
+  // 📥 Handle file import
+  onFileChange(event: any) {
+    const target: DataTransfer = <DataTransfer>(event.target);
+
+    if (target.files.length !== 1) {
+      console.error('Cannot use multiple files');
+      return;
+    }
+
+    const file = target.files[0];
+    const reader: FileReader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+      const data = XLSX.utils.sheet_to_json(ws);
+
+      // Transform your data into School interface
+      this.schools = (data as any[]).map((row: any) => ({
+        SCHNUM: row['SCHNUM'] || '',
+        STATE_NAME: row['STATE_NAME'] || '',
+        SCH_NAME: row['SCH_NAME'] || '',
+        CUST_CODE: row['CUST_CODE'] || '',
+        CUSTODIAN: row['CUSTODIAN'] || '',
+        TOWN: row['TOWN'] || ''
+        // address: row['Address'] || '',
+        // accrYr: row['Accr. Year'] || '',
+        // status: row['Status'] || ''
+      }));
+
+      event.target.value = null;
+
+      console.log('Imported Data:', this.schools);
+    };
+
+    reader.readAsBinaryString(file);
   }
-
-
-  schools = [
-    { id: 1, schNo: '021985', name: 'GSS Minna', state: 'Niger', lga: 'Chchanga', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
-    { id: 2, schNo: '032456', name: 'CSS Yenagos', state: 'Bayelsa', lga: 'Yenagoa', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
-    { id: 3, schNo: '031867', name: 'FGC Kuta', state: 'FCT', lga: 'Abaji', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
-    { id: 4, schNo: '025674', name: 'RHS Minna', state: 'Kaduna', lga: 'Bosso', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
-    { id: 5, schNo: '001654', name: 'GSS Bida', state: 'Kano', lga: 'Kuda', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
-    { id: 6, schNo: '010764', name: 'GGSC Bosso', state: 'Kogi', lga: 'Okene', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' }
-  ];
 
 }
