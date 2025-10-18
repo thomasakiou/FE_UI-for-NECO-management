@@ -35,7 +35,7 @@ interface School {
   CUST_CODE: string;
   CUSTODIAN: string;
   TOWN: string;
-  // status: string;
+  ACCD_YEAR: string;
 }
 
 @Component({
@@ -136,8 +136,8 @@ export class SchoolsComponent implements OnInit{
         SCH_NAME: row['SCH_NAME'] || '',
         CUST_CODE: row['CUST_CODE'] || '',
         CUSTODIAN: row['CUSTODIAN'] || '',
-        TOWN: row['TOWN'] || ''
-        // address: row['Address'] || '',
+        TOWN: row['TOWN'] || '',
+        ACCD_YEAR: row['ACCD_YEAR'] || '',
         // accrYr: row['Accr. Year'] || '',
         // status: row['Status'] || ''
       }));

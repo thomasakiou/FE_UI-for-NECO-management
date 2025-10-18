@@ -14,6 +14,21 @@ import {Textarea} from 'primeng/textarea';
 import {Toast} from 'primeng/toast';
 import {Toolbar} from 'primeng/toolbar';
 import {FormsModule} from '@angular/forms';
+import * as XLSX from 'xlsx';
+import {NgForOf} from '@angular/common';
+
+export interface Candidate {
+  id: number;
+  SCHNUM: string;
+  REG_NO: string;
+  CAND_NAME: string;
+  S_OF_ONAME?: string;
+  LGA_NAME?: string;
+  sex?: string;
+  // certNo?: string;
+  // status?: string;
+  subjects: string[];
+}
 
 interface Cand {
   name: string;
@@ -38,6 +53,7 @@ interface Cand {
     FormsModule,
     Toolbar,
     ConfirmDialog,
+    NgForOf,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './candidates.component.html',
@@ -45,6 +61,8 @@ interface Cand {
 })
 export class CandidatesComponent implements OnInit{
   number: string | undefined;
+  candidates: any[] = [];
+  maxSubjects = 0;
 
 
   exams: Cand[] | undefined;
@@ -96,12 +114,53 @@ export class CandidatesComponent implements OnInit{
   }
 
 
-  candidates = [
-    { id: 1, regNo: '567389865AD', name: 'John Doe', state: 'Niger', dob: '26/07/1992', gender: 'M', school: 'GGSC Bida', certNo: '767887', status: 'active' },
-    { id: 2, regNo: '978658332HG', name: 'Peter Bat Evans', state: 'Bayelsa', dob: '04/04/2000', gender: 'M', school: 'Police station', certNo: '908761', status: 'active' },
-    { id: 3, regNo: '29845617FG', name: 'Jane Doe', state: 'FCT', dob: '13/05/1982', gender: 'F', school: 'GSS Maitumbi', certNo: '678543', status: 'active' },
-    { id: 4, regNo: '98075678FG', name: 'Anthony Joshua', state: 'Kaduna', dob: '27/07/2001', gender: 'M', school: 'Bosso College', certNo: '908745', status: 'active' },
-    { id: 5, regNo: '98653234GH', name: 'Nathan S. Danny', state: 'Kano', dob: '09/09/2011', gender: 'M', school: 'CSS Minna', certNo: '234561', status: 'active' },
-    { id: 6, regNo: '12345678GH', name: 'Bosso Bida', state: 'Kogi', dob: '10/10/2012', gender: 'M', school: 'Ebidou College', certNo: '012345', status: 'active' }
-  ];
+  onFileChange(evt: any) {
+    const target: DataTransfer = <DataTransfer>(evt.target);
+    if (target.files.length !== 1) throw new Error('Cannot use multiple files');
+    const reader: FileReader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const bstr: string = e.target.result;
+      const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+      const wsname: string = wb.SheetNames[0];
+      const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+      const data = XLSX.utils.sheet_to_json(ws, { defval: '' });
+
+      this.candidates = data.map((row: any, index: number) => {
+        //Find all columns starting with "REG_" but not "REG_NO"
+        const subjectFields = Object.keys(row)
+          .map(key => key.trim())
+          .filter(key => key.toUpperCase().startsWith('REG_') && key.toUpperCase() !== 'REG_NO');
+
+        const subjects: string[] = subjectFields
+          .map(key => {
+            const val = row[key];
+            // Only add subject if it has a value
+            return val ? key.substring(4) : '';  // strip 'REG_'
+          })
+          .filter(subject => subject !== '');
+
+        // Track the largest subject count
+        if (subjects.length > this.maxSubjects) {
+          this.maxSubjects = subjects.length;
+        }
+
+        return {
+          id: index + 1,
+          SCHNUM: row['SCHNUM'] || '',
+          REG_NO: row['REG_NO'] || '',
+          CAND_NAME: row['CAND_NAME'] || '',
+          S_OF_ONAME: row['S_OF_ONAME'] || '',
+          LGA_NAME: row['LGA_NAME'] || '',
+          SEX: row['SEX'] || '',
+          subjects
+        };
+      });
+
+      console.log('Parsed candidates:', this.candidates);
+    };
+
+    reader.readAsBinaryString(target.files[0]);
+  }
 }

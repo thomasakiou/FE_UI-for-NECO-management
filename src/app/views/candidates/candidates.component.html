@@ -13,8 +13,22 @@
 
     <ng-template pTemplate="end">
       <div class="toolbar-actions toolbar-colors">
-        <p-button label="Import" icon="pi pi-download" severity="secondary"></p-button>
+<!--        <p-button label="Import" icon="pi pi-download" severity="secondary"></p-button>-->
+        <input
+          type="file"
+          #fileInput
+          style="display: none;"
+          (change)="onFileChange($event)"
+          accept=".xls,.xlsx"
+        />
+        <p-button
+          label="Import"
+          icon="pi pi-download"
+          severity="secondary"
+          (onClick)="fileInput.click()">
+        </p-button>
         <p-button label="Export" icon="pi pi-upload" severity="secondary"></p-button>
+
       </div>
     </ng-template>
   </p-toolbar>
@@ -22,9 +36,9 @@
   <p-table
     #dt
     [value]="candidates"
-    [rows]="5"
+    [rows]="10"
     [paginator]="true"
-    [globalFilterFields]="['name', 'category']"
+    [globalFilterFields]="['REG_NO', 'SCHNUM', 'S_OF_ONAME', 'LGA_NAME', 'CAND_NAME']"
     [tableStyle]="{ 'min-width': '75rem' }"
     [rowHover]="true"
     dataKey="id"
@@ -40,7 +54,9 @@
 
           <p-iconfield>
             <p-inputicon class="pi pi-search"></p-inputicon>
-            <input pInputText type="text" placeholder="Search..." />
+            <input pInputText type="text"
+                   (input)="dt.filterGlobal($event.target.value, 'contains')"
+                   placeholder="Search..." />
           </p-iconfield>
         </div>
       </div>
@@ -53,14 +69,20 @@
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="schNo">Reg No. <p-sortIcon field="regNo"></p-sortIcon></th>
-        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-        <th pSortableColumn="state">State <p-sortIcon field="state"></p-sortIcon></th>
-        <th pSortableColumn="dob">DOB <p-sortIcon field="dob"></p-sortIcon></th>
-        <th pSortableColumn="gender">Gender <p-sortIcon field="gender"></p-sortIcon></th>
-        <th pSortableColumn="school">School <p-sortIcon field="school"></p-sortIcon></th>
-        <th pSortableColumn="certNo">Cert. No <p-sortIcon field="certNo"></p-sortIcon></th>
-        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+        <th pSortableColumn="SCHNUM">School No. <p-sortIcon field="SCHNUM"></p-sortIcon></th>
+        <th pSortableColumn="REG_NO">Registration No. <p-sortIcon field="REG_NO"></p-sortIcon></th>
+        <th pSortableColumn="CAND_NAME">Name <p-sortIcon field="CAND_NAME"></p-sortIcon></th>
+        <th pSortableColumn="S_OF_ONAME">State <p-sortIcon field="S_OF_ONAME"></p-sortIcon></th>
+        <th pSortableColumn="LGA_NAME">LGA <p-sortIcon field="LGA_NAME"></p-sortIcon></th>
+        <th pSortableColumn="SEX">Sex <p-sortIcon field="SEX"></p-sortIcon></th>
+<!--        <th pSortableColumn="certNo">Cert. No <p-sortIcon field="certNo"></p-sortIcon></th>-->
+<!--        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>-->
+
+        <!-- Subject headers -->
+<!--        <th *ngFor="let n of [1,2,3,4,5,6,7,8,9]">Subject {{ n }}</th>-->
+
+        <!-- Subject headers -->
+        <th *ngFor="let n of [1, 2, 3, 4, 5, 6, 7, 8, 9]">Subject {{ n }}</th>
         <th></th>
       </tr>
     </ng-template>
@@ -68,14 +90,22 @@
     <ng-template pTemplate="body" let-candidate>
       <tr>
         <td><p-tableCheckbox [value]="candidate"></p-tableCheckbox></td>
-        <td>{{ candidate.regNo }}</td>
-        <td>{{ candidate.name }}</td>
-        <td>{{ candidate.state }}</td>
-        <td>{{ candidate.dob }}</td>
-        <td>{{ candidate.gender }}</td>
-        <td>{{ candidate.school }}</td>
-        <td>{{ candidate.certNo }}</td>
-        <td>{{ candidate.status }}</td>
+        <td>{{ candidate.SCHNUM }}</td>
+        <td>{{ candidate.REG_NO }}</td>
+        <td>{{ candidate.CAND_NAME }}</td>
+        <td>{{ candidate.S_OF_ONAME }}</td>
+        <td>{{ candidate.LGA_NAME }}</td>
+        <td>{{ candidate.SEX }}</td>
+
+        <!-- Subject values -->
+        <td *ngFor="let subject of candidate.subjects; let i = index">{{ subject }}</td>
+
+        <!-- Fill empty cells if fewer subjects -->
+        <td *ngFor="let empty of [].constructor(maxSubjects - candidate.subjects.length)"></td>
+
+
+<!--        <td>{{ candidate.certNo }}</td>-->
+<!--        <td>{{ candidate.status }}</td>-->
         <td class="row-actions">
           <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="showDialog()"></p-button>
           <p-button (click)="confirm1($event)" class="delete-btn" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"></p-button>

@@ -45,7 +45,7 @@
   [value]="schools"
   [rows]="10"
   [paginator]="true"
-  [globalFilterFields]="['name', 'category']"
+  [globalFilterFields]="['SCH_NAME', 'SCHNUM', 'STATE_NAME', 'CUSTODIAN']"
   [tableStyle]="{ 'min-width': '80rem' }"
   [rowHover]="true"
   dataKey="id"
@@ -61,7 +61,9 @@
 
           <p-iconfield>
           <p-inputicon class="pi pi-search"></p-inputicon>
-          <input pInputText type="text" placeholder="Search..." />
+          <input pInputText type="text"
+                 (input)="dt.filterGlobal($event.target.value, 'contains')"
+                 placeholder="Search..." />
         </p-iconfield>
         </div>
       </div>
@@ -82,6 +84,7 @@
 <!--      <th pSortableColumn="address">Address <p-sortIcon field="address"></p-sortIcon></th>-->
       <th pSortableColumn="CUSTODIAN">Custodian <p-sortIcon field="CUSTODIAN"></p-sortIcon></th>
       <th pSortableColumn="TOWN">Town <p-sortIcon field="TOWN"></p-sortIcon></th>
+      <th pSortableColumn="ACCD_YEAR">Accr Year <p-sortIcon field="ACCD_YEAR"></p-sortIcon></th>
 <!--      <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>-->
       <th></th>
     </tr>
@@ -98,7 +101,7 @@
       <td>{{ school.CUST_CODE }}</td>
       <td>{{ school.CUSTODIAN }}</td>
       <td>{{ school.TOWN }}</td>
-<!--      <td>{{ school.status }}</td>-->
+      <td>{{ school.ACCD_YEAR }}</td>
       <td class="row-actions">
         <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="showDialog()"></p-button>
         <p-button (click)="confirm2($event)" class="delete-btn" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"></p-button>

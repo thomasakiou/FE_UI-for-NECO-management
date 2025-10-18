@@ -90,9 +90,9 @@
 .row-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 0.5rem;
-  height: 100%;
+  height: 100px;               // 👈 give a fixed height if your rows are consistent
+  overflow: hidden;
 }
 
 //=================PRIMENG Checkbox override==========================
