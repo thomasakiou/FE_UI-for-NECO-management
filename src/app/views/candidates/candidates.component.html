@@ -75,7 +75,7 @@
         <th pSortableColumn="S_OF_ONAME">State <p-sortIcon field="S_OF_ONAME"></p-sortIcon></th>
         <th pSortableColumn="LGA_NAME">LGA <p-sortIcon field="LGA_NAME"></p-sortIcon></th>
         <th pSortableColumn="SEX">Sex <p-sortIcon field="SEX"></p-sortIcon></th>
-<!--        <th pSortableColumn="certNo">Cert. No <p-sortIcon field="certNo"></p-sortIcon></th>-->
+        <th pSortableColumn="D_OF_B">DOB <p-sortIcon field="D_OF_B"></p-sortIcon></th>
 <!--        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>-->
 
         <!-- Subject headers -->
@@ -96,6 +96,7 @@
         <td>{{ candidate.S_OF_ONAME }}</td>
         <td>{{ candidate.LGA_NAME }}</td>
         <td>{{ candidate.SEX }}</td>
+        <td>{{ candidate.D_OF_B }}</td>
 
         <!-- Subject values -->
         <td *ngFor="let subject of candidate.subjects; let i = index">{{ subject }}</td>

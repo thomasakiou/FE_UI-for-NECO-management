@@ -25,7 +25,7 @@ export interface Candidate {
   S_OF_ONAME?: string;
   LGA_NAME?: string;
   sex?: string;
-  // certNo?: string;
+  D_OF_B?: string;
   // status?: string;
   subjects: string[];
 }
@@ -154,6 +154,7 @@ export class CandidatesComponent implements OnInit{
           S_OF_ONAME: row['S_OF_ONAME'] || '',
           LGA_NAME: row['LGA_NAME'] || '',
           SEX: row['SEX'] || '',
+          D_OF_B: row['D_OF_B'] || '',
           subjects
         };
       });
@@ -162,5 +163,6 @@ export class CandidatesComponent implements OnInit{
     };
 
     reader.readAsBinaryString(target.files[0]);
+    // reader.readAsText(target.files[0]);
   }
 }

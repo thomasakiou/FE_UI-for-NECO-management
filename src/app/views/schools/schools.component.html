@@ -103,7 +103,7 @@
       <td>{{ school.TOWN }}</td>
       <td>{{ school.ACCD_YEAR }}</td>
       <td class="row-actions">
-        <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="showDialog()"></p-button>
+        <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="editSchool(school)"></p-button>
         <p-button (click)="confirm2($event)" class="delete-btn" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"></p-button>
       </td>
     </tr>
@@ -121,38 +121,48 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             <p-inputgroup class="py-2">
-              <input pInputText placeholder="School number" />
+              <input pInputText placeholder="School number" [(ngModel)]="selectedSchool.SCHNUM" readonly />
             </p-inputgroup>
 
               <p-inputgroup class="py-2">
-                <input pInputText placeholder="School name" />
+                <input pInputText placeholder="School name" [(ngModel)]="selectedSchool.SCH_NAME"/>
               </p-inputgroup>
 
               <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">
-                <p-select optionLabel="name" placeholder="State" class="w-full md:w-56" />
-                <p-select optionLabel="name" placeholder="LGA" class="w-full md:w-56" />
+<!--                <p-select optionLabel="name" placeholder="State" class="w-full md:w-56" [(ngModel)]="selectedSchool.STATE_NAME"/>-->
+                <p-select
+                  [options]="states"
+                  optionLabel="name"
+                  optionValue="name"
+                  placeholder="Select State"
+                  [(ngModel)]="selectedSchool.STATE_NAME"
+                  class="w-full md:w-56">
+                </p-select>
+
+                <!--                <p-select optionLabel="name" placeholder="Town" class="w-full md:w-56" [(ngModel)]="selectedSchool.TOWN"/>-->
+                <input pInputText placeholder="Town" [(ngModel)]="selectedSchool.TOWN"/>
               </p-inputgroup>
 
               <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">
-                <p-select optionLabel="name" placeholder="Zone" class="w-full md:w-56" />
-                <p-select optionLabel="name" placeholder="Custodian" class="w-full md:w-56" />
+                <p-select optionLabel="name" placeholder="Custodian Code" class="w-full md:w-56" [(ngModel)]="selectedSchool.CUST_CODE"/>
+                <p-select optionLabel="name" placeholder="Custodian" class="w-full md:w-56" [(ngModel)]="selectedSchool.CUSTODIAN"/>
               </p-inputgroup>
 
-              <p-inputgroup class="py-2">
-                <textarea rows="5" cols="30" pTextarea placeholder="Address of school"></textarea>
-              </p-inputgroup>
+<!--              <p-inputgroup class="py-2">-->
+<!--                <textarea rows="5" cols="30" pTextarea placeholder="Year of Accreditation"></textarea>-->
+<!--              </p-inputgroup>-->
 
 
               <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">
-                <input pInputText placeholder="Status" />
-                <p-datepicker [showIcon]="true" inputId="buttondisplay" [showOnFocus]="false" placeholder="Accreditation Date"/>
+                <input pInputText placeholder="Accreditation Year" [(ngModel)]="selectedSchool.ACCD_YEAR"/>
+<!--                <p-datepicker [showIcon]="true" inputId="buttondisplay" [showOnFocus]="false" placeholder="Accreditation Year"/>-->
               </p-inputgroup>
 
 
 
               <div class="modal-btns">
                 <p-button label="Cancel" [raised]="true" severity="secondary" icon="pi pi-times" (onClick)="visible=false"/>
-                <p-button label="Save" [raised]="true" severity="success" icon="pi pi-check" />
+                <p-button label="Save" [raised]="true" severity="success" icon="pi pi-check" (onClick)="saveSchool()"/>
               </div>
           </div>
   </p-dialog>

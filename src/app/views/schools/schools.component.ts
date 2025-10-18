@@ -11,11 +11,13 @@ import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { DropdownModule } from '@coreui/angular';
+// import { DropdownModule } from 'primeng/dropdown';
 import {Dialog, DialogModule} from 'primeng/dialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ConfirmDialog} from 'primeng/confirmdialog';
 import {InputGroup} from 'primeng/inputgroup';
 import * as XLSX from 'xlsx';
+import {School} from '../models/school.models'
 import {InputGroupAddon} from 'primeng/inputgroupaddon';
 import {IftaLabel} from 'primeng/iftalabel';
 import {FloatLabel} from 'primeng/floatlabel';
@@ -27,23 +29,12 @@ interface Exm {
   name: string;
 }
 
-interface School {
-  id: number;
-  SCHNUM: string;
-  STATE_NAME: string;
-  SCH_NAME: string;
-  CUST_CODE: string;
-  CUSTODIAN: string;
-  TOWN: string;
-  ACCD_YEAR: string;
-}
-
 @Component({
   selector: 'app-schools',
   imports: [TableModule, SelectModule, ToastModule, ToolbarModule,
     InputTextModule, TextareaModule, CommonModule, DropdownModule,
     InputTextModule, FormsModule, InputIconModule, DialogModule,
-    IconFieldModule, InputIconModule, ButtonModule, Dialog, ConfirmDialog, InputGroup, DatePicker],
+    IconFieldModule, InputIconModule, ButtonModule, Dialog, ConfirmDialog, InputGroup],
   providers: [ConfirmationService, MessageService],
   templateUrl: './schools.component.html',
   styleUrl: './schools.component.scss'
@@ -54,6 +45,30 @@ export class SchoolsComponent implements OnInit{
   visible: boolean = false;
   exams: Exm[] | undefined;
   selectedExam: Exm | undefined;
+
+  selectedSchool: School = {
+    id: 0,
+    SCHNUM: '',
+    STATE_NAME: '',
+    SCH_NAME: '',
+    CUST_CODE: '',
+    CUSTODIAN: '',
+    TOWN: '',
+    ACCD_YEAR: ''
+  };
+
+  states = [
+    { name: 'Abia' }, { name: 'Adamawa' }, { name: 'Akwa Ibom' }, { name: 'Anambra' },
+    { name: 'Bauchi' }, { name: 'Bayelsa' }, { name: 'Benue' }, { name: 'Borno' },
+    { name: 'Cross River' }, { name: 'Delta' }, { name: 'Ebonyi' }, { name: 'Edo' },
+    { name: 'Ekiti' }, { name: 'Enugu' }, { name: 'FCT' }, { name: 'Gombe' },
+    { name: 'Imo' }, { name: 'Jigawa' }, { name: 'Kaduna' }, { name: 'Kano' },
+    { name: 'Katsina' }, { name: 'Kebbi' }, { name: 'Kogi' }, { name: 'Kwara' },
+    { name: 'Lagos' }, { name: 'Nasarawa' }, { name: 'Niger' }, { name: 'Ogun' },
+    { name: 'Ondo' }, { name: 'Osun' }, { name: 'Oyo' }, { name: 'Plateau' },
+    { name: 'Rivers' }, { name: 'Sokoto' }, { name: 'Taraba' }, { name: 'Yobe' },
+    { name: 'Zamfara' }
+  ];
 
   showDialog() {
     this.visible = true;
@@ -98,6 +113,56 @@ export class SchoolsComponent implements OnInit{
   }
 
 
+  // Open modal to EDIT a school
+  editSchool(school: any) {
+    // this.visible = true;
+    this.selectedSchool = { ...school };
+
+    // Make sure STATE_NAME matches the states array value
+    // e.g. if backend returns lowercase, fix it:
+    const match = this.states.find(s => s.name.toLowerCase() === this.selectedSchool.STATE_NAME.toLowerCase());
+    if (match) {
+      this.selectedSchool.STATE_NAME = match.name;
+    } else {
+      this.selectedSchool.STATE_NAME = ''; // fallback if no match
+    }
+
+    this.visible = true;
+  }
+
+
+  // Save updated or new record
+  saveSchool() {
+    if (this.selectedSchool.id) {
+      // update existing
+      const index = this.schools.findIndex(s => s.id === this.selectedSchool.id);
+      if (index !== -1) {
+        this.schools[index] = { ...this.selectedSchool };
+      }
+    } else {
+      // add new
+      const newId = this.schools.length ? Math.max(...this.schools.map(s => s.id)) + 1 : 1;
+      this.selectedSchool.id = newId;
+      this.schools.push({ ...this.selectedSchool });
+    }
+
+    this.visible = false;
+    this.resetForm();
+  }
+
+
+  resetForm() {
+    this.selectedSchool = {
+      id: 0,
+      SCHNUM: '',
+      SCH_NAME: '',
+      STATE_NAME: '',
+      TOWN: '',
+      CUST_CODE: '',
+      CUSTODIAN: '',
+      ACCD_YEAR: ''
+    };
+  }
 
   // schools = [
   //   { id: 1, schNo: '021985', name: 'GSS Minna', state: 'Niger', lga: 'Chchanga', zone: 'SW', address: '19 tunga', custodian: 'Police station', accrYr: '2021', status: 'active' },
@@ -109,7 +174,7 @@ export class SchoolsComponent implements OnInit{
   // ];
 
 
-  // 📥 Handle file import
+  // Handle file import
   onFileChange(event: any) {
     const target: DataTransfer = <DataTransfer>(event.target);
 
