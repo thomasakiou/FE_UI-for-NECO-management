@@ -49,6 +49,7 @@ export class UsersComponent implements OnInit {
     USERNUM: '',
     USER_NAME: '',
     EMAIL: '',
+    PHONE: '',
     ROLE: '',
     ACTIVATED: '',
     // TOWN: '',
@@ -155,6 +156,7 @@ export class UsersComponent implements OnInit {
       USERNUM: '',
       USER_NAME: '',
       EMAIL: '',
+      PHONE: '',
       ROLE: '',
       ACTIVATED: '',
     };
@@ -197,7 +199,7 @@ export class UsersComponent implements OnInit {
         EMAIL: row['EMAIL'] || '',
         ROLE: row['ROLE'] || '',
         ACTIVATED: row['ACTIVATED'] || '',
-        // TOWN: row['TOWN'] || '',
+        PHONE: row['PHONE'] || '',
         // ACCD_YEAR: row['ACCD_YEAR'] || '',
         // accrYr: row['Accr. Year'] || '',
         // status: row['Status'] || ''

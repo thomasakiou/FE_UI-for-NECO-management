@@ -6,7 +6,7 @@
   <p-toolbar class="mb-6">
     <ng-template pTemplate="start">
       <div class="toolbar-actions">
-        <p-button (onClick)="showDialog()" label="New" icon="pi pi-plus"></p-button>
+        <p-button (onClick)="showDialog()" label="Add User" icon="pi pi-plus"></p-button>
         <p-toast />
         <p-confirmDialog/>
 <!--        <p-button (click)="confirm2($event)" class="delete-btn" severity="danger" label="Delete" icon="pi pi-trash" outlined></p-button>-->
@@ -82,8 +82,8 @@
         <th pSortableColumn="SCHNUM">User No. <p-sortIcon field="SCHNUM"></p-sortIcon></th>
         <th pSortableColumn="SCH_NAME">User Name <p-sortIcon field="SCH_NAME"></p-sortIcon></th>
         <th pSortableColumn="STATE_NAME">Email <p-sortIcon field="STATE_NAME"></p-sortIcon></th>
+        <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
         <th pSortableColumn="CUST_CODE">Role <p-sortIcon field="CUST_CODE"></p-sortIcon></th>
-        <!--      <th pSortableColumn="zone">Zone <p-sortIcon field="zone"></p-sortIcon></th>-->
         <!--      <th pSortableColumn="address">Address <p-sortIcon field="address"></p-sortIcon></th>-->
         <th pSortableColumn="CUSTODIAN">Activated <p-sortIcon field="CUSTODIAN"></p-sortIcon></th>
 <!--        <th pSortableColumn="TOWN">Town <p-sortIcon field="TOWN"></p-sortIcon></th>-->
@@ -100,7 +100,7 @@
         <td>{{ user.USER_NAME }}</td>
         <td>{{ user.EMAIL }}</td>
         <!--      <td>{{ school.lga }}</td>-->
-        <!--      <td>{{ school.zone }}</td>-->
+        <td>{{ user.PHONE }}</td>
         <td>{{ user.ROLE }}</td>
         <td>{{ user.ACTIVATED }}</td>
 <!--        <td>{{ school.TOWN }}</td>-->
