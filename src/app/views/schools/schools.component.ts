@@ -11,7 +11,6 @@ import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { DropdownModule } from '@coreui/angular';
-// import { DropdownModule } from 'primeng/dropdown';
 import {Dialog, DialogModule} from 'primeng/dialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ConfirmDialog} from 'primeng/confirmdialog';

@@ -17,12 +17,41 @@ export const navItems: INavData[] = [
   {
     name: 'School',
     url: '/schools',
-    icon: 'nav-icon-bullet'
+    iconComponent: { name: 'cil-home' }
+    // icon: 'nav-icon-bullet'
   },
   {
     name: 'Candidate',
     url: '/candidates',
-    icon: 'nav-icon-bullet'
+    iconComponent: { name: 'cil-user' }
+    // icon: 'nav-icon-bullet'
+  },
+  {
+    name: 'Administration',
+    title: true
+  },
+  {
+    name: 'Admin',
+    url: '/admin',
+    iconComponent: { name: 'cil-settings' },
+    children: [
+      {
+        name: 'Manage Users',
+        url: '/users',
+        iconComponent: { name: 'cil-people' }
+        // icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Manage Roles',
+        url: '/roles',
+        iconComponent: { name: 'cil-task' }
+      },
+      {
+        name: 'Manage Permissions',
+        url: '/permissions',
+        iconComponent: {name: 'cil-lock-locked'}
+      }
+    ]
   },
   // {
   //   name: 'Typography',

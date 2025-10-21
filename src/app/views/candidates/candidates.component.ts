@@ -114,6 +114,7 @@ export class CandidatesComponent implements OnInit{
   }
 
 
+
   onFileChange(evt: any) {
     const target: DataTransfer = <DataTransfer>(evt.target);
     if (target.files.length !== 1) throw new Error('Cannot use multiple files');
@@ -128,18 +129,32 @@ export class CandidatesComponent implements OnInit{
       const data = XLSX.utils.sheet_to_json(ws, { defval: '' });
 
       this.candidates = data.map((row: any, index: number) => {
-        //Find all columns starting with "REG_" but not "REG_NO"
-        const subjectFields = Object.keys(row)
-          .map(key => key.trim())
-          .filter(key => key.toUpperCase().startsWith('REG_') && key.toUpperCase() !== 'REG_NO');
+        // Object to group scores by subject name (e.g. ENG: [98, 99])
+        const subjectScores: Record<string, number[]> = {};
 
-        const subjects: string[] = subjectFields
-          .map(key => {
-            const val = row[key];
-            // Only add subject if it has a value
-            return val ? key.substring(4) : '';  // strip 'REG_'
-          })
-          .filter(subject => subject !== '');
+        // Loop over all columns in the row
+        Object.keys(row).forEach((key) => {
+          const trimmedKey = key.trim();
+          const value = row[trimmedKey];
+
+          if (!value) return; // skip empty cells
+
+          // Match patterns like SS1_ENG, SS2_MTH
+          const match = trimmedKey.match(/^(SS\d+)_(\w+)$/i);
+          if (match) {
+            const subjectCode = match[2]; // ENG, MTH, etc.
+            if (!subjectScores[subjectCode]) {
+              subjectScores[subjectCode] = [];
+            }
+            subjectScores[subjectCode].push(value);
+          }
+        });
+
+        // Format subjects like "ENG (98, 99)"
+        const subjects: string[] = Object.keys(subjectScores).map(subject => {
+          const scores = subjectScores[subject].join(', ');
+          return `${subject} (${scores})`;
+        });
 
         // Track the largest subject count
         if (subjects.length > this.maxSubjects) {
@@ -163,6 +178,6 @@ export class CandidatesComponent implements OnInit{
     };
 
     reader.readAsBinaryString(target.files[0]);
-    // reader.readAsText(target.files[0]);
   }
+
 }

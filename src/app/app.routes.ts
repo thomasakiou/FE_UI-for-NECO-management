@@ -38,9 +38,34 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./views/candidates/routes').then((m) => m.routes),
         // canActivate: [() => inject(AuthGuard).canActivate]
-      }
+      },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./views/admin/users/users.component').then(m => m.UsersComponent),
+        // data: {
+        //   title: 'Manage User'
+        // }
+      },
+      {
+        path: 'roles',
+        loadComponent: () =>
+          import('./views/admin/roles/roles.component').then(m => m.RolesComponent),
+        // data: {
+        //   title: 'Manage Roles'
+        // }
+      },
+      {
+        path: 'permissions',
+        loadComponent: () =>
+          import('./views/admin/permissions/permissions.component').then(m => m.PermissionsComponent),
+        // data: {
+        //   title: 'Manage Permissions'
+        // }
+      },
     ]
   },
+
   { path: '**', redirectTo: 'login' }
 ];
 

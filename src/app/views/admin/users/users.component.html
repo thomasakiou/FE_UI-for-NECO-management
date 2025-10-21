@@ -1,0 +1,172 @@
+<!--<p>users works!</p>-->
+
+
+<div class="card">
+
+  <p-toolbar class="mb-6">
+    <ng-template pTemplate="start">
+      <div class="toolbar-actions">
+        <p-button (onClick)="showDialog()" label="New" icon="pi pi-plus"></p-button>
+        <p-toast />
+        <p-confirmDialog/>
+<!--        <p-button (click)="confirm2($event)" class="delete-btn" severity="danger" label="Delete" icon="pi pi-trash" outlined></p-button>-->
+      </div>
+    </ng-template>
+
+
+    <ng-template pTemplate="end">
+      <div class="toolbar-actions toolbar-colors">
+        <!--        <p-button label="Import" icon="pi pi-download" severity="secondary"></p-button>-->
+        <input
+          type="file"
+          #fileInput
+          style="display: none;"
+          (change)="onFileChange($event)"
+          accept=".xls,.xlsx"
+        />
+        <p-button
+          label="Import"
+          icon="pi pi-download"
+          severity="secondary"
+          (onClick)="fileInput.click()">
+        </p-button>
+        <!--        <p-button label="Import" icon="pi pi-download" severity="secondary" (onClick)="fileInput.click()"></p-button>-->
+        <!--        <input-->
+        <!--          type="file"-->
+        <!--          #fileInput-->
+        <!--          accept=".xls,.xlsx"-->
+        <!--          style="display: none"-->
+        <!--          (change)="onFileChange($event)"-->
+        <!--        />-->
+        <p-button label="Export" icon="pi pi-upload" severity="secondary"></p-button>
+      </div>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table
+    #dt
+    [value]="users"
+    [rows]="10"
+    [paginator]="true"
+    [globalFilterFields]="['SCH_NAME', 'SCHNUM', 'STATE_NAME', 'CUSTODIAN']"
+    [tableStyle]="{ 'min-width': '80rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [showCurrentPageReport]="true"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-caption">
+        <h5 class="m-0">User Management</h5>
+
+        <div class="d-flex align-items-center gap-2">
+<!--          <p-select [options]="exams" [(ngModel)]="selectedExam" optionLabel="name" placeholder="Select exam" class="w-full md:w-56" />-->
+
+          <p-iconfield>
+            <p-inputicon class="pi pi-search"></p-inputicon>
+            <input pInputText type="text"
+                   (input)="dt.filterGlobal($event.target.value, 'contains')"
+                   placeholder="Search..." />
+          </p-iconfield>
+        </div>
+      </div>
+    </ng-template>
+
+
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="SCHNUM">User No. <p-sortIcon field="SCHNUM"></p-sortIcon></th>
+        <th pSortableColumn="SCH_NAME">User Name <p-sortIcon field="SCH_NAME"></p-sortIcon></th>
+        <th pSortableColumn="STATE_NAME">Email <p-sortIcon field="STATE_NAME"></p-sortIcon></th>
+        <th pSortableColumn="CUST_CODE">Role <p-sortIcon field="CUST_CODE"></p-sortIcon></th>
+        <!--      <th pSortableColumn="zone">Zone <p-sortIcon field="zone"></p-sortIcon></th>-->
+        <!--      <th pSortableColumn="address">Address <p-sortIcon field="address"></p-sortIcon></th>-->
+        <th pSortableColumn="CUSTODIAN">Activated <p-sortIcon field="CUSTODIAN"></p-sortIcon></th>
+<!--        <th pSortableColumn="TOWN">Town <p-sortIcon field="TOWN"></p-sortIcon></th>-->
+<!--        <th pSortableColumn="ACCD_YEAR">Accr Year <p-sortIcon field="ACCD_YEAR"></p-sortIcon></th>-->
+        <!--      <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>-->
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td><p-tableCheckbox [value]="user"></p-tableCheckbox></td>
+        <td>{{ user.USERNUM }}</td>
+        <td>{{ user.USER_NAME }}</td>
+        <td>{{ user.EMAIL }}</td>
+        <!--      <td>{{ school.lga }}</td>-->
+        <!--      <td>{{ school.zone }}</td>-->
+        <td>{{ user.ROLE }}</td>
+        <td>{{ user.ACTIVATED }}</td>
+<!--        <td>{{ school.TOWN }}</td>-->
+<!--        <td>{{ school.ACCD_YEAR }}</td>-->
+        <td class="row-actions">
+          <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (onClick)="editUser(user)"></p-button>
+          <p-button (click)="confirm2($event)" class="delete-btn" icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+
+
+  <p-dialog header="ADD NEW SCHOOL"
+            [modal]="true"
+            [(visible)]="visible"
+            [style]="{ width: '50rem' }"
+            [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <p-inputgroup class="py-2">
+        <input pInputText placeholder="User number" [(ngModel)]="selectedUser.USERNUM" readonly />
+      </p-inputgroup>
+
+      <p-inputgroup class="py-2">
+        <input pInputText placeholder="User name" [(ngModel)]="selectedUser.USER_NAME"/>
+      </p-inputgroup>
+
+      <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">
+        <!--                <p-select optionLabel="name" placeholder="State" class="w-full md:w-56" [(ngModel)]="selectedSchool.STATE_NAME"/>-->
+<!--        <p-select-->
+<!--          [options]="users"-->
+<!--          optionLabel="name"-->
+<!--          optionValue="name"-->
+<!--          placeholder="User Name"-->
+<!--          [(ngModel)]="selectedUser.USER_NAME"-->
+<!--          class="w-full md:w-56">-->
+<!--        </p-select>-->
+
+        <!--                <p-select optionLabel="name" placeholder="Town" class="w-full md:w-56" [(ngModel)]="selectedSchool.TOWN"/>-->
+        <input pInputText placeholder="Email" [(ngModel)]="selectedUser.EMAIL"/>
+      </p-inputgroup>
+
+      <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">
+        <p-select optionLabel="name" placeholder="User role" class="w-full md:w-56" [(ngModel)]="selectedUser.ROLE"/>
+        <p-select optionLabel="name" placeholder="Activated" class="w-full md:w-56" [(ngModel)]="selectedUser.ACTIVATED"/>
+      </p-inputgroup>
+
+      <!--              <p-inputgroup class="py-2">-->
+      <!--                <textarea rows="5" cols="30" pTextarea placeholder="Year of Accreditation"></textarea>-->
+      <!--              </p-inputgroup>-->
+
+
+<!--      <p-inputgroup class="grid grid-cols-2 gap-4 col-span-2 py-2">-->
+<!--        <input pInputText placeholder="Accreditation Year" [(ngModel)]="selectedSchool.ACCD_YEAR"/>-->
+<!--        &lt;!&ndash;                <p-datepicker [showIcon]="true" inputId="buttondisplay" [showOnFocus]="false" placeholder="Accreditation Year"/>&ndash;&gt;-->
+<!--      </p-inputgroup>-->
+
+
+
+      <div class="modal-btns">
+        <p-button label="Cancel" [raised]="true" severity="secondary" icon="pi pi-times" (onClick)="visible=false"/>
+        <p-button label="Save" [raised]="true" severity="success" icon="pi pi-check" (onClick)="saveUser()"/>
+      </div>
+    </div>
+  </p-dialog>
+</div>

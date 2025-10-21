@@ -298,6 +298,23 @@
   width: 100%;
 }
 
+//==============================
+// Make child nav items smaller
+//==============================
+// links smaller
+.sidebar-nav .nav-group-items .nav-link {
+  font-size: 0.87rem !important;   // slightly smaller text
+  padding-left: 4rem !important;    // more indentation
+  opacity: 0.9;                     // subtle fade
+}
+
+// icons smaller
+.sidebar-nav .nav-group-items .nav-icon {
+  font-size: 0.6rem !important;     // smaller icon
+  margin-right: 0.25rem !important; // tighter spacing
+}
+
+
 //
 //.p-select {
 //  background-color: #ffffff;
