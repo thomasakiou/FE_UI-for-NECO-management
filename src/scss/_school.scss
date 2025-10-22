@@ -4,7 +4,7 @@
 // Card (CoreUI container)
 //*****************************
 .card {
-  background-color: $white;
+  background-color: $white !important;
   border-radius: 0.5rem;
   padding: 1rem;
   overflow: visible;
